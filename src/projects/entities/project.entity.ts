@@ -6,10 +6,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+  BeforeInsert,
+  BeforeUpdate,
+  } from 'typeorm';
 
-@Entity()
-export class Project {
+  @Entity()
+  export class Project {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
@@ -39,8 +41,8 @@ export class Project {
   @Column({ default: false })
   isFavorite!: boolean;
 
-  @Column({ type: 'date', nullable: true })
-  startDate?: Date;
+  @Column({ type: 'date', default: () => 'CURRENT_DATE' })
+  startDate!: Date;
 
   @Column({ type: 'date', nullable: true })
   endDate?: Date;
@@ -66,4 +68,13 @@ export class Project {
   // Si tiene valor (fecha), el registro está marcado como eliminado pero persiste en la DB.
   @DeleteDateColumn()
   deletedAt?: Date;
-}
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  checkFields() {
+    this.name = this.name.trim();
+    if (this.description) {
+      this.description = this.description.trim();
+    }
+  }
+  }
