@@ -3,12 +3,14 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
+import { PaginationDto } from '../common/dtos/pagination.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -28,20 +30,33 @@ export class ProjectsService {
     }
   }
 
-  findAll() {
-    return `This action returns all projects`;
+  findAll(paginationDto: PaginationDto) {
+    const { limit = 5, offset = 0 } = paginationDto;
+
+    return this.ProjectRepository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  async findOne(id: string) {
+    const project = await this.ProjectRepository.findOneBy({ id });
+
+    if (!project) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+
+    return project;
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
+  update(id: string, updateProjectDto: UpdateProjectDto) {
     return `This action updates a #${id} project`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async remove(id: string) {
+    const project = await this.findOne(id);
+    await this.ProjectRepository.remove(project);
+    return { deleted: true };
   }
 
   private handleDbExceptions(error: any) {
