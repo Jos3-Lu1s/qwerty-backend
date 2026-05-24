@@ -49,8 +49,21 @@ export class ProjectsService {
     return project;
   }
 
-  update(id: string, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+  async update(id: string, updateProjectDto: UpdateProjectDto) {
+    const project = await this.ProjectRepository.preload({
+      id,
+      ...updateProjectDto,
+    });
+
+    if (!project) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+
+    try {
+      return await this.ProjectRepository.save(project);
+    } catch (error: any) {
+      this.handleDbExceptions(error);
+    }
   }
 
   async remove(id: string) {
