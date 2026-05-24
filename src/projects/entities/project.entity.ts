@@ -1,3 +1,4 @@
+import { Status, Priority } from 'src/interfaces';
 import {
   Column,
   CreateDateColumn,
@@ -6,8 +7,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Status } from '../../interfaces/status';
-import { Priority } from '../../interfaces/priority';
 
 @Entity()
 export class Project {
@@ -20,7 +19,7 @@ export class Project {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @Column()
+  @Column({ nullable: true })
   color!: string;
 
   @Column({
@@ -40,11 +39,11 @@ export class Project {
   @Column({ default: false })
   isFavorite!: boolean;
 
-  @Column({ type: 'date' })
-  startDate!: Date;
+  @Column({ type: 'date', nullable: true })
+  startDate?: Date;
 
-  @Column({ type: 'date' })
-  endDate!: Date;
+  @Column({ type: 'date', nullable: true })
+  endDate?: Date;
 
   // Tiempo total asignado/estimado para el proyecto, almacenado en minutos.
   @Column({ type: 'int', default: 0 })
