@@ -51,4 +51,8 @@ export class CreateProjectDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
 }

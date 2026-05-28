@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
-  } from 'typeorm';
+} from 'typeorm';
 
   @Entity()
   export class Project {
@@ -22,7 +22,7 @@ import {
   description?: string;
 
   @Column({ nullable: true })
-  color!: string;
+  color?: string;
 
   @Column({
     type: 'enum',
@@ -64,6 +64,10 @@ import {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  //Imagen de portada
+  @Column({ type: 'text', nullable: true })
+  image?: string;
 
   // Si tiene valor (fecha), el registro está marcado como eliminado pero persiste en la DB.
   @DeleteDateColumn()
