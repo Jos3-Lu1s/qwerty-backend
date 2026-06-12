@@ -7,7 +7,7 @@ export class FilesService {
 
     getStaticProjectImage(imageName: string) {
 
-        const path = join(process.cwd(), 'static/uploads', imageName);
+        const path = join(process.cwd(), 'static/project_images', imageName);
 
         if (!existsSync(path)) {
             throw new BadRequestException(`No project found with image ${imageName}`);
