@@ -1,4 +1,5 @@
 import { Status, Priority } from 'src/interfaces';
+import { Task } from '../../tasks/entities/task.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +9,7 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 
   @Entity()
@@ -72,6 +74,9 @@ import {
   // Si tiene valor (fecha), el registro está marcado como eliminado pero persiste en la DB.
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @OneToMany(() => Task, (task) => task.project, { cascade: true })
+  tasks?: Task[];
 
   @BeforeInsert()
   @BeforeUpdate()
