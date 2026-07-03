@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
     try {
       const { password, ...userData } = createUserDto;
 
-      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+      const hashedPassword = bcrypt.hashSync(password, 10);
 
       const user = this.userRepository.create({
         ...userData,
