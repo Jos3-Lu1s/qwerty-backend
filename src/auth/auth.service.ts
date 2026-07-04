@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, Logger, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -43,8 +43,29 @@ export class AuthService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const { password, ...toUpdate } = updateUserDto;
+
+    const user = await this.userRepository.preload({
+      id,
+      ...toUpdate,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    if (password) {
+      user.password = bcrypt.hashSync(password, 10);
+    }
+
+    try {
+      await this.userRepository.save(user);
+      const { password: _, ...result } = user;
+      return result;
+    } catch (error: any) {
+      this.handleDbErrors(error);
+    }
   }
 
   remove(id: number) {
