@@ -2,15 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from '../projects/entities/project.entity';
+import { User } from '../auth/entities/user.entity';
+import { Task } from '../tasks/entities/task.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { TasksService } from '../tasks/tasks.service';
 import { Status, Priority } from '../interfaces';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class SeedService {
   constructor(
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task>,
     private readonly projectsService: ProjectsService,
     private readonly tasksService: TasksService,
   ) {}
@@ -22,8 +29,14 @@ export class SeedService {
   }
 
   private async deleteTables() {
+    const taskQueryBuilder = this.taskRepository.createQueryBuilder();
+    await taskQueryBuilder.delete().where({}).execute();
+
     const queryBuilder = this.projectRepository.createQueryBuilder();
     await queryBuilder.delete().where({}).execute();
+
+    const userQueryBuilder = this.userRepository.createQueryBuilder();
+    await userQueryBuilder.delete().where({}).execute();
   }
 
   private async insertProjects() {
@@ -192,16 +205,24 @@ export class SeedService {
       },
     ];
 
+    const adminUser = this.userRepository.create({
+      email: 'admin@qwerty.com',
+      password: bcrypt.hashSync('admin123', 10),
+      fullName: 'Admin User',
+      roles: ['admin'],
+    });
+    await this.userRepository.save(adminUser);
+
     for (const projectDto of demoProjects) {
       const { tasks, ...projectData } = projectDto;
-      const createdProject = await this.projectsService.create(projectData as any);
+      const createdProject = await this.projectsService.create(projectData as any, adminUser);
       if (!createdProject) continue;
 
       for (const task of tasks) {
         await this.tasksService.create({
           ...task,
           projectId: createdProject.id,
-        });
+        }, adminUser);
       }
     }
   }

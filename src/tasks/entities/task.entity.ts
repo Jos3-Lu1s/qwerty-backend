@@ -1,5 +1,6 @@
 import { Status, Priority } from 'src/interfaces';
 import { Project } from '../../projects/entities/project.entity';
+import { User } from '../../auth/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -46,8 +47,11 @@ export class Task {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'RESTRICT' })
   project!: Project;
+
+  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'RESTRICT', nullable: false })
+  user!: User;
 
   @BeforeInsert()
   @BeforeUpdate()

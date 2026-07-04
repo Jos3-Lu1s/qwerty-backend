@@ -3,7 +3,8 @@ import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PaginationDto } from '../common/dtos/pagination.dto';
-import { Auth } from '../auth/decorators';
+import { Auth, GetUser } from '../auth/decorators';
+import { User } from '../auth/entities/user.entity';
 
 @Controller('projects')
 @Auth()
@@ -11,8 +12,11 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectsService.create(createProjectDto);
+  create(
+    @Body() createProjectDto: CreateProjectDto,
+    @GetUser() user: User,
+  ) {
+    return this.projectsService.create(createProjectDto, user);
   }
 
   @Get()

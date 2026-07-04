@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { PaginationDto } from '../common/dtos/pagination.dto';
+import { User } from '../auth/entities/user.entity';
 
 @Injectable()
 export class ProjectsService {
@@ -21,9 +22,12 @@ export class ProjectsService {
     private readonly ProjectRepository: Repository<Project>,
   ) {}
 
-  async create(createProjectDto: CreateProjectDto) {
+  async create(createProjectDto: CreateProjectDto, user: User) {
     try {
-      const project = this.ProjectRepository.create(createProjectDto);
+      const project = this.ProjectRepository.create({
+        ...createProjectDto,
+        user,
+      });
       return await this.ProjectRepository.save(project);
     } catch (error: any) {
       this.handleDbExceptions(error);

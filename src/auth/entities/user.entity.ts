@@ -6,7 +6,10 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
+import { Project } from '../../projects/entities/project.entity';
+import { Task } from '../../tasks/entities/task.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -48,6 +51,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @OneToMany(() => Project, (project) => project.user)
+  projects!: Project[];
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks!: Task[];
 
   @BeforeInsert()
   @BeforeUpdate()

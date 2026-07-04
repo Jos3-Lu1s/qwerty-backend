@@ -1,5 +1,6 @@
 import { Status, Priority } from 'src/interfaces';
 import { Task } from '../../tasks/entities/task.entity';
+import { User } from '../../auth/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +11,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 
   @Entity()
@@ -77,6 +79,9 @@ import {
 
   @OneToMany(() => Task, (task) => task.project, { cascade: true })
   tasks?: Task[];
+
+  @ManyToOne(() => User, (user) => user.projects, { onDelete: 'RESTRICT', nullable: false })
+  user!: User;
 
   @BeforeInsert()
   @BeforeUpdate()

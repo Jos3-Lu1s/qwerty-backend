@@ -12,6 +12,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { Task } from './entities/task.entity';
 import { ProjectsService } from '../projects/projects.service';
+import { User } from '../auth/entities/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -23,7 +24,7 @@ export class TasksService {
     private readonly projectsService: ProjectsService,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto, user: User) {
     const { projectId, ...taskData } = createTaskDto;
     const project = await this.projectsService.findOne(projectId);
 
@@ -31,6 +32,7 @@ export class TasksService {
       const task = this.taskRepository.create({
         ...taskData,
         project,
+        user,
       });
       const savedTask = await this.taskRepository.save(task);
       return this.findOne(savedTask.id);
