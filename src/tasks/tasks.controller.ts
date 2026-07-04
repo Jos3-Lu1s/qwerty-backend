@@ -13,8 +13,10 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { Auth } from '../auth/decorators';
 
 @Controller('tasks')
+@Auth()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 

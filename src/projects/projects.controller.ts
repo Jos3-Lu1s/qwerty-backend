@@ -3,8 +3,10 @@ import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PaginationDto } from '../common/dtos/pagination.dto';
+import { Auth } from '../auth/decorators';
 
 @Controller('projects')
+@Auth()
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
