@@ -35,11 +35,11 @@ export class SeedService {
     const taskQueryBuilder = this.taskRepository.createQueryBuilder();
     await taskQueryBuilder.delete().where({}).execute();
 
-    const tagQueryBuilder = this.tagRepository.createQueryBuilder();
-    await tagQueryBuilder.delete().where({}).execute();
-
     const queryBuilder = this.projectRepository.createQueryBuilder();
     await queryBuilder.delete().where({}).execute();
+
+    const tagQueryBuilder = this.tagRepository.createQueryBuilder();
+    await tagQueryBuilder.delete().where({}).execute();
 
     const userQueryBuilder = this.userRepository.createQueryBuilder();
     await userQueryBuilder.delete().where({}).execute();
@@ -54,6 +54,7 @@ export class SeedService {
         color: '#3b82f6',
         priority: Priority.HIGH,
         userIndex: 0, // Admin User
+        tagIndices: [0, 1], // Urgente, Diseño
         tasks: [
           {
             name: 'Elaboración de planos y distribución de planta',
@@ -61,6 +62,7 @@ export class SeedService {
             status: Status.COMPLETED,
             priority: Priority.HIGH,
             userIndex: 0, // Admin User
+            tagIndices: [1], // Diseño
           },
           {
             name: 'Aprobación de permisos y licencias de obra',
@@ -68,6 +70,7 @@ export class SeedService {
             status: Status.IN_PROGRESS,
             priority: Priority.HIGH,
             userIndex: 2, // Developer User
+            tagIndices: [0], // Urgente
           },
           {
             name: 'Instalación de sistemas eléctricos y climatización',
@@ -75,6 +78,7 @@ export class SeedService {
             status: Status.PENDING,
             priority: Priority.MEDIUM,
             userIndex: 1, // Manager User
+            tagIndices: [],
           },
         ],
       },
@@ -85,6 +89,7 @@ export class SeedService {
         color: '#ef4444',
         priority: Priority.MEDIUM,
         userIndex: 1, // Manager User
+        tagIndices: [1], // Diseño
         tasks: [
           {
             name: 'Lluvia de ideas y mapeo de empatía',
@@ -92,6 +97,7 @@ export class SeedService {
             status: Status.COMPLETED,
             priority: Priority.MEDIUM,
             userIndex: 1, // Manager User
+            tagIndices: [1], // Diseño
           },
           {
             name: 'Creación del User Journey Map',
@@ -99,6 +105,7 @@ export class SeedService {
             status: Status.IN_PROGRESS,
             priority: Priority.HIGH,
             userIndex: 2, // Developer User
+            tagIndices: [1], // Diseño
           },
           {
             name: 'Prototipado en baja fidelidad (wireframes)',
@@ -106,6 +113,7 @@ export class SeedService {
             status: Status.PENDING,
             priority: Priority.MEDIUM,
             userIndex: 0, // Admin User
+            tagIndices: [],
           },
         ],
       },
@@ -116,6 +124,7 @@ export class SeedService {
         color: '#10b981',
         priority: Priority.LOW,
         userIndex: 1, // Manager User
+        tagIndices: [0, 3], // Urgente, Marketing
         tasks: [
           {
             name: 'Definición de objetivos de la campaña',
@@ -123,6 +132,7 @@ export class SeedService {
             status: Status.COMPLETED,
             priority: Priority.HIGH,
             userIndex: 1, // Manager User
+            tagIndices: [3], // Marketing
           },
           {
             name: 'Creación de contenido publicitario',
@@ -130,6 +140,7 @@ export class SeedService {
             status: Status.IN_PROGRESS,
             priority: Priority.MEDIUM,
             userIndex: 0, // Admin User
+            tagIndices: [3, 0], // Marketing, Urgente
           },
           {
             name: 'Configuración de anuncios pagados',
@@ -137,6 +148,7 @@ export class SeedService {
             status: Status.PENDING,
             priority: Priority.LOW,
             userIndex: 2, // Developer User
+            tagIndices: [3], // Marketing
           },
         ],
       },
@@ -147,6 +159,7 @@ export class SeedService {
         color: '#8b5cf6',
         priority: Priority.MEDIUM,
         userIndex: 2, // Developer User
+        tagIndices: [2, 4], // Desarrollo, Backend
         tasks: [
           {
             name: 'Análisis y perfilado de consultas SQL',
@@ -154,6 +167,7 @@ export class SeedService {
             status: Status.COMPLETED,
             priority: Priority.HIGH,
             userIndex: 2, // Developer User
+            tagIndices: [4], // Backend
           },
           {
             name: 'Migración de servicios monolíticos a microservicios',
@@ -161,6 +175,7 @@ export class SeedService {
             status: Status.IN_PROGRESS,
             priority: Priority.HIGH,
             userIndex: 0, // Admin User
+            tagIndices: [2, 4], // Desarrollo, Backend
           },
           {
             name: 'Implementación de pruebas unitarias y cobertura',
@@ -168,6 +183,7 @@ export class SeedService {
             status: Status.PENDING,
             priority: Priority.MEDIUM,
             userIndex: 1, // Manager User
+            tagIndices: [2], // Desarrollo
           },
         ],
       },
@@ -178,6 +194,7 @@ export class SeedService {
         color: '#f59e0b',
         priority: Priority.HIGH,
         userIndex: 2, // Developer User
+        tagIndices: [0, 2, 4], // Urgente, Desarrollo, Backend
         tasks: [
           {
             name: 'Diseño del esquema de base de datos con TypeORM',
@@ -185,6 +202,7 @@ export class SeedService {
             status: Status.COMPLETED,
             priority: Priority.HIGH,
             userIndex: 2, // Developer User
+            tagIndices: [2, 4], // Desarrollo, Backend
           },
           {
             name: 'Integración del módulo de autenticación JWT',
@@ -192,6 +210,7 @@ export class SeedService {
             status: Status.IN_PROGRESS,
             priority: Priority.HIGH,
             userIndex: 2, // Developer User
+            tagIndices: [0, 2, 4], // Urgente, Desarrollo, Backend
           },
           {
             name: 'Documentación interactiva con Swagger',
@@ -199,6 +218,7 @@ export class SeedService {
             status: Status.PENDING,
             priority: Priority.LOW,
             userIndex: 1, // Manager User
+            tagIndices: [2], // Desarrollo
           },
         ],
       },
@@ -209,6 +229,7 @@ export class SeedService {
         color: '#6b7280',
         priority: Priority.LOW,
         userIndex: 2, // Developer User
+        tagIndices: [2, 5], // Desarrollo, Frontend
         tasks: [
           {
             name: 'Maquetación de la interfaz responsive',
@@ -216,6 +237,7 @@ export class SeedService {
             status: Status.COMPLETED,
             priority: Priority.MEDIUM,
             userIndex: 2, // Developer User
+            tagIndices: [2, 5], // Desarrollo, Frontend
           },
           {
             name: 'Integración de estado global e inicio de sesión',
@@ -223,6 +245,7 @@ export class SeedService {
             status: Status.IN_PROGRESS,
             priority: Priority.HIGH,
             userIndex: 1, // Manager User
+            tagIndices: [2, 5], // Desarrollo, Frontend
           },
           {
             name: 'Optimización de carga y Lighthouse',
@@ -230,10 +253,27 @@ export class SeedService {
             status: Status.PENDING,
             priority: Priority.MEDIUM,
             userIndex: 2, // Developer User
+            tagIndices: [0, 2, 5], // Urgente, Desarrollo, Frontend
           },
         ],
       },
     ];
+
+    // Create 6 global tags
+    const demoTags = [
+      { name: 'Urgente', color: '#ef4444' },    // Index 0
+      { name: 'Diseño', color: '#3b82f6' },     // Index 1
+      { name: 'Desarrollo', color: '#10b981' }, // Index 2
+      { name: 'Marketing', color: '#8b5cf6' },  // Index 3
+      { name: 'Backend', color: '#f59e0b' },    // Index 4
+      { name: 'Frontend', color: '#6b7280' },   // Index 5
+    ];
+
+    const createdTags: Tag[] = [];
+    for (const tagDto of demoTags) {
+      const tag = this.tagRepository.create(tagDto);
+      createdTags.push(await this.tagRepository.save(tag));
+    }
 
     // Create 3 users with different roles
     const adminUser = this.userRepository.create({
@@ -261,19 +301,25 @@ export class SeedService {
     await this.userRepository.save(seedUsers);
 
     for (const projectDto of demoProjects) {
-      const { tasks, userIndex, ...projectData } = projectDto;
+      const { tasks, userIndex, tagIndices = [], ...projectData } = projectDto;
       const projectUser = seedUsers[userIndex];
+      const projectTagIds = tagIndices.map((idx) => createdTags[idx].id);
       
-      const createdProject = await this.projectsService.create(projectData as any, projectUser);
+      const createdProject = await this.projectsService.create({
+        ...projectData,
+        tagIds: projectTagIds,
+      } as any, projectUser);
       if (!createdProject) continue;
 
       for (const taskDto of tasks) {
-        const { userIndex: taskUserIndex, ...taskData } = taskDto;
+        const { userIndex: taskUserIndex, tagIndices: taskTagIndices = [], ...taskData } = taskDto;
         const taskUser = seedUsers[taskUserIndex];
+        const taskTagIds = taskTagIndices.map((idx) => createdTags[idx].id);
 
         await this.tasksService.create({
           ...taskData,
           projectId: createdProject.id,
+          tagIds: taskTagIds,
         }, taskUser);
       }
     }
