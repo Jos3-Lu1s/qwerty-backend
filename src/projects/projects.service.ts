@@ -50,6 +50,32 @@ export class ProjectsService {
         tags: true,
         user: true,
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        color: true,
+        status: true,
+        priority: true,
+        isFavorite: true,
+        startDate: true,
+        endDate: true,
+        assignedTime: true,
+        isActive: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+        tags: {
+          id: true,
+          name: true,
+          color: true,
+        },
+      },
     });
   }
 
@@ -59,6 +85,32 @@ export class ProjectsService {
       relations: {
         tags: true,
         user: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        color: true,
+        status: true,
+        priority: true,
+        isFavorite: true,
+        startDate: true,
+        endDate: true,
+        assignedTime: true,
+        isActive: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+        tags: {
+          id: true,
+          name: true,
+          color: true,
+        },
       },
     });
 
