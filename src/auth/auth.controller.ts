@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Patch, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, ParseUUIDPipe, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
-import { Auth } from './decorators';
+import { Auth, GetUser } from './decorators';
 import { ValidRoles } from './interfaces';
+import { User } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -16,6 +17,14 @@ export class AuthController {
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  @Get('check-status')
+  @Auth()
+  checkAuthStatus(
+    @GetUser() user: User,
+  ) {
+    return this.authService.checkAuthStatus(user);
   }
 
   @Patch(':id')
