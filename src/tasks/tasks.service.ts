@@ -6,13 +6,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { Task } from './entities/task.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { User } from '../auth/entities/user.entity';
+import { Tag } from '../tags/entities/tag.entity';
 
 @Injectable()
 export class TasksService {
@@ -21,18 +22,22 @@ export class TasksService {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
     private readonly projectsService: ProjectsService,
   ) {}
 
   async create(createTaskDto: CreateTaskDto, user: User) {
-    const { projectId, ...taskData } = createTaskDto;
+    const { projectId, tagIds = [], ...taskData } = createTaskDto;
     const project = await this.projectsService.findOne(projectId);
+    const tags = tagIds.length > 0 ? await this.tagRepository.findBy({ id: In(tagIds) }) : [];
 
     try {
       const task = this.taskRepository.create({
         ...taskData,
         project,
         user,
+        tags,
       });
       const savedTask = await this.taskRepository.save(task);
       return this.findOne(savedTask.id);
@@ -49,6 +54,8 @@ export class TasksService {
       skip: offset,
       relations: {
         project: true,
+        user: true,
+        tags: true,
       },
       select: {
         id: true,
@@ -62,6 +69,16 @@ export class TasksService {
         project: {
           id: true,
           name: true,
+        },
+        user: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+        tags: {
+          id: true,
+          name: true,
+          color: true,
         },
       },
     };
@@ -78,7 +95,11 @@ export class TasksService {
   async findOne(id: string) {
     const task = await this.taskRepository.findOne({
       where: { id },
-      relations: { project: true },
+      relations: {
+        project: true,
+        user: true,
+        tags: true,
+      },
       select: {
         id: true,
         name: true,
@@ -92,6 +113,16 @@ export class TasksService {
           id: true,
           name: true,
         },
+        user: {
+          id: true,
+          fullName: true,
+          email: true,
+        },
+        tags: {
+          id: true,
+          name: true,
+          color: true,
+        },
       },
     });
 
@@ -104,11 +135,15 @@ export class TasksService {
 
   async update(id: string, updateTaskDto: UpdateTaskDto) {
     const task = await this.findOne(id);
-    const { projectId, ...toUpdate } = updateTaskDto;
+    const { projectId, tagIds, ...toUpdate } = updateTaskDto;
 
     if (projectId) {
       const project = await this.projectsService.findOne(projectId);
       task.project = project;
+    }
+
+    if (tagIds) {
+      task.tags = await this.tagRepository.findBy({ id: In(tagIds) });
     }
 
     try {

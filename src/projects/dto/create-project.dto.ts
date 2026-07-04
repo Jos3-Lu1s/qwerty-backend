@@ -7,6 +7,7 @@ import {
   IsString,
   Min,
   IsDateString,
+  IsUUID,
 } from 'class-validator';
 import { Status, Priority } from 'src/interfaces';
 
@@ -55,4 +56,8 @@ export class CreateProjectDto {
   @IsString()
   @IsOptional()
   image?: string;
+
+  @IsUUID('4', { each: true })
+  @IsOptional()
+  tagIds?: string[];
 }

@@ -5,6 +5,7 @@ import { TasksController } from './tasks.controller';
 import { Task } from './entities/task.entity';
 import { ProjectsModule } from '../projects/projects.module';
 import { AuthModule } from '../auth/auth.module';
+import { TagsModule } from '../tags/tags.module';
 
 @Module({
   controllers: [TasksController],
@@ -13,6 +14,7 @@ import { AuthModule } from '../auth/auth.module';
     TypeOrmModule.forFeature([Task]),
     ProjectsModule,
     AuthModule,
+    TagsModule,
   ],
   exports: [TasksService, TypeOrmModule],
 })

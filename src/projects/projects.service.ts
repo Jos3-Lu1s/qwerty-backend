@@ -8,10 +8,11 @@ import {
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { PaginationDto } from '../common/dtos/pagination.dto';
 import { User } from '../auth/entities/user.entity';
+import { Tag } from '../tags/entities/tag.entity';
 
 @Injectable()
 export class ProjectsService {
@@ -20,13 +21,18 @@ export class ProjectsService {
   constructor(
     @InjectRepository(Project)
     private readonly ProjectRepository: Repository<Project>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
   ) {}
 
   async create(createProjectDto: CreateProjectDto, user: User) {
+    const { tagIds = [], ...projectData } = createProjectDto;
+    const tags = tagIds.length > 0 ? await this.tagRepository.findBy({ id: In(tagIds) }) : [];
     try {
       const project = this.ProjectRepository.create({
-        ...createProjectDto,
+        ...projectData,
         user,
+        tags,
       });
       return await this.ProjectRepository.save(project);
     } catch (error: any) {
@@ -40,11 +46,21 @@ export class ProjectsService {
     return this.ProjectRepository.find({
       take: limit,
       skip: offset,
+      relations: {
+        tags: true,
+        user: true,
+      },
     });
   }
 
   async findOne(id: string) {
-    const project = await this.ProjectRepository.findOneBy({ id });
+    const project = await this.ProjectRepository.findOne({
+      where: { id },
+      relations: {
+        tags: true,
+        user: true,
+      },
+    });
 
     if (!project) {
       throw new NotFoundException(`Project with id ${id} not found`);
@@ -54,13 +70,13 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
-    const project = await this.ProjectRepository.preload({
-      id,
-      ...updateProjectDto,
-    });
+    const { tagIds, ...toUpdate } = updateProjectDto;
+    const project = await this.findOne(id);
 
-    if (!project) {
-      throw new NotFoundException(`Project with id ${id} not found`);
+    this.ProjectRepository.merge(project, toUpdate);
+
+    if (tagIds) {
+      project.tags = await this.tagRepository.findBy({ id: In(tagIds) });
     }
 
     try {

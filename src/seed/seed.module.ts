@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../auth/entities/user.entity';
 import { Task } from '../tasks/entities/task.entity';
+import { Tag } from '../tags/entities/tag.entity';
 
 @Module({
   controllers: [SeedController],
@@ -15,7 +16,7 @@ import { Task } from '../tasks/entities/task.entity';
     ProjectsModule,
     TasksModule,
     AuthModule,
-    TypeOrmModule.forFeature([User, Task]),
+    TypeOrmModule.forFeature([User, Task, Tag]),
   ],
 })
 export class SeedModule {}

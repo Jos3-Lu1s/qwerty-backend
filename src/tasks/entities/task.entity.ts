@@ -1,6 +1,7 @@
 import { Status, Priority } from 'src/interfaces';
 import { Project } from '../../projects/entities/project.entity';
 import { User } from '../../auth/entities/user.entity';
+import { Tag } from '../../tags/entities/tag.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +12,8 @@ import {
   BeforeInsert,
   BeforeUpdate,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity({ name: 'tasks' })
@@ -52,6 +55,10 @@ export class Task {
 
   @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'RESTRICT', nullable: false })
   user!: User;
+
+  @ManyToMany(() => Tag, (tag) => tag.tasks, { cascade: true })
+  @JoinTable({ name: 'task_tags' })
+  tags?: Tag[];
 
   @BeforeInsert()
   @BeforeUpdate()

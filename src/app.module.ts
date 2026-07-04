@@ -6,6 +6,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
 import { SeedModule } from './seed/seed.module';
+import { TagsModule } from './tags/tags.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -27,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
     FilesModule,
     SeedModule,
     AuthModule,
+    TagsModule,
   ],
 })
 export class AppModule {}

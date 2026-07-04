@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Project } from '../projects/entities/project.entity';
 import { User } from '../auth/entities/user.entity';
 import { Task } from '../tasks/entities/task.entity';
+import { Tag } from '../tags/entities/tag.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { TasksService } from '../tasks/tasks.service';
 import { Status, Priority } from '../interfaces';
@@ -18,6 +19,8 @@ export class SeedService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
     private readonly projectsService: ProjectsService,
     private readonly tasksService: TasksService,
   ) {}
@@ -31,6 +34,9 @@ export class SeedService {
   private async deleteTables() {
     const taskQueryBuilder = this.taskRepository.createQueryBuilder();
     await taskQueryBuilder.delete().where({}).execute();
+
+    const tagQueryBuilder = this.tagRepository.createQueryBuilder();
+    await tagQueryBuilder.delete().where({}).execute();
 
     const queryBuilder = this.projectRepository.createQueryBuilder();
     await queryBuilder.delete().where({}).execute();

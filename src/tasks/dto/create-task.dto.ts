@@ -27,4 +27,8 @@ export class CreateTaskDto {
   @IsUUID()
   @IsNotEmpty()
   projectId!: string;
+
+  @IsUUID('4', { each: true })
+  @IsOptional()
+  tagIds?: string[];
 }
